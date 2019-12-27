@@ -167,13 +167,12 @@ export class HomePage {
 			icon: {
 				url: url,
 				size: { width: 32, height: 32 },
+				anchor: [0, 32],
 			},
 			position: markerPos,
 			zIndex: 999,
-			anchor: [0, 32],
 		}
 		const marker = this.hMap.nativeMapObj.addMarkerSync(options);
-		marker.setIconAnchor(options.anchor[0], options.anchor[1]);
 
 		const currLoc = await this.hMap.nativeMapObj.getMyLocation();
 		const routePoints: ILatLng[] = [];
