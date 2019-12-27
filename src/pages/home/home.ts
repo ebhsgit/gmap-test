@@ -158,13 +158,18 @@ export class HomePage {
 		console.log('HomePage: addNewMarker()');
 		if (!lat) lat = CAMERA_DEFAULT_LAT + Math.random() / 100;
 		if (!lng) lng = CAMERA_DEFAULT_LONG + Math.random() / 100;
+
+		const url = "./assets/imgs/finish.png";
 		const options: MarkerOptions = {
 			title: 'Marker',
 			snippet: "hello",
-      icon: 'blue',
+			icon: {
+				url: url,
+				size: { width: 32, height: 32 },
+			},
 			position: new LatLng(lat, lng),
 			zIndex: 999,
-      animation: GoogleMapsAnimation.DROP
+			anchor: [16, 16],
 		}
 		this.hMap.nativeMapObj.addMarkerSync(options);
 	}
