@@ -146,12 +146,12 @@ export class HomePage {
 
 	hideMap() {
 		console.log('HomePage: hideMap()');
-		this.hMap.nativeMapObj.setDiv();
+		this.hMap.hide();
 	}
 
 	showMap() {
 		console.log('HomePage: showMap()');
-		this.hMap.nativeMapObj.setDiv("map_canvas");
+		this.hMap.show();
 	}
 
 	async addMarker(lat?, lng?) {
@@ -170,12 +170,12 @@ export class HomePage {
 			},
 			position: markerPos,
 			zIndex: 999,
-			anchor: [16, 16],
+			anchor: [0, 32],
 		}
-		this.hMap.nativeMapObj.addMarkerSync(options);
+		const marker = this.hMap.nativeMapObj.addMarkerSync(options);
+		marker.setIconAnchor(options.anchor[0], options.anchor[1]);
 
 		const currLoc = await this.hMap.nativeMapObj.getMyLocation();
-
 		const routePoints: ILatLng[] = [];
 		routePoints.push(currLoc.latLng);
 		routePoints.push(markerPos);
