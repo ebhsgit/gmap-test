@@ -182,7 +182,6 @@ export class HomePage {
 
 		const po: PolylineOptions = {
 			points: routePoints,
-			color: `#AA00FF66`,
 			width: 8,
 			geodesic: true
 		}
