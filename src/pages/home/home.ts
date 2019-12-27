@@ -12,8 +12,8 @@ import { ToastController, Platform } from 'ionic-angular';
 import { SecondPage } from "../second/second";
 import { MapControllerProvider, MapInstance } from "../../providers/map-controller";
 
-const CAMERA_DEFAULT_LAT = 47.497912;
-const CAMERA_DEFAULT_LONG = 19.040235;
+const CAMERA_DEFAULT_LAT = 65.9667;
+const CAMERA_DEFAULT_LONG = -18.5333;
 const CAMERA_DEFAULT_ZOOMLEVEL = 13;
 const POLYGON_STROKE_COLOR = '#73922a70';
 const POLYGON_FILL_COLOR = '#8fbf1c20';
