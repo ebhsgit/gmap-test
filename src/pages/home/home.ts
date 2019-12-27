@@ -4,7 +4,7 @@ import {
 	GoogleMaps,
 	GoogleMap,
 	GoogleMapsEvent,
-	LocationService, GoogleMapOptions, Environment, MarkerOptions, GoogleMapsAnimation, LatLng
+	LocationService, GoogleMapOptions, Environment, MarkerOptions, GoogleMapsAnimation, LatLng, PolylineOptions, ILatLng
 } from '@ionic-native/google-maps';
 
 import { ToastController, Platform } from 'ionic-angular';
@@ -154,12 +154,13 @@ export class HomePage {
 		this.hMap.nativeMapObj.setDiv("map_canvas");
 	}
 
-	addMarker(lat?, lng?) {
+	async addMarker(lat?, lng?) {
 		console.log('HomePage: addNewMarker()');
 		if (!lat) lat = CAMERA_DEFAULT_LAT + Math.random() / 100;
 		if (!lng) lng = CAMERA_DEFAULT_LONG + Math.random() / 100;
 
 		const url = "./assets/imgs/finish.png";
+		const markerPos = new LatLng(lat, lng);
 		const options: MarkerOptions = {
 			title: 'Marker',
 			snippet: "hello",
@@ -167,11 +168,25 @@ export class HomePage {
 				url: url,
 				size: { width: 32, height: 32 },
 			},
-			position: new LatLng(lat, lng),
+			position: markerPos,
 			zIndex: 999,
 			anchor: [16, 16],
 		}
 		this.hMap.nativeMapObj.addMarkerSync(options);
+
+		const currLoc = await this.hMap.nativeMapObj.getMyLocation();
+
+		const routePoints: ILatLng[] = [];
+		routePoints.push(currLoc.latLng);
+		routePoints.push(markerPos);
+
+		const po: PolylineOptions = {
+			points: routePoints,
+			color: `#AA00FF66`,
+			width: 8,
+			geodesic: true
+		}
+		this.hMap.nativeMapObj.addPolylineSync(po);
 	}
 
 
