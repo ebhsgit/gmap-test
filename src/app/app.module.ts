@@ -3,7 +3,6 @@ import {ErrorHandler, NgModule} from '@angular/core';
 import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
 
 import {MyApp} from './app.component';
-import {HomePage} from '../pages/home/home';
 import {ListPage} from '../pages/list/list';
 import {SecondPage} from "../pages/second/second"
 
@@ -15,7 +14,6 @@ import {MapControllerProvider} from "../providers/map-controller";
 @NgModule({
   declarations: [
     MyApp,
-    HomePage,
     ListPage,
     SecondPage
   ],
@@ -28,7 +26,6 @@ import {MapControllerProvider} from "../providers/map-controller";
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage,
     ListPage,
     SecondPage
   ],

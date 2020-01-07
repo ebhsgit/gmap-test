@@ -11,6 +11,9 @@ import { HomePage } from './home';
     imports: [
         IonicPageModule.forChild(HomePage),
     ],
-    exports: [CustomMarkerHtmlWindowComponent]
+    exports: [
+        HomePage,
+        CustomMarkerHtmlWindowComponent
+    ]
 })
 export class HomePageModule { }

@@ -1,6 +1,6 @@
 import { ApplicationRef, Component, ComponentFactoryResolver, ComponentRef, Injector, NgZone } from '@angular/core';
 import { GoogleMapOptions, GoogleMapsEvent, HtmlInfoWindow, ILatLng, LatLng, Marker, MarkerOptions, PolylineOptions } from '@ionic-native/google-maps';
-import { AlertController, Events, NavController, Platform, ToastController } from 'ionic-angular';
+import { AlertController, Events, IonicPage, NavController, Platform, ToastController } from 'ionic-angular';
 import { MapControllerProvider, MapInstance } from "../../providers/map-controller";
 import { SecondPage } from "../second/second";
 import { CustomMarkerHtmlWindowComponent } from './custom-marker-html-window/custom-marker-html-window';
@@ -16,6 +16,7 @@ const POLYGON_STROKE_WIDTH = 2;
 
 const mapId = 'HOME_MAP';
 
+@IonicPage()
 @Component({
 	selector: 'page-home',
 	templateUrl: 'home.html'
