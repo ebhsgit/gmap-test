@@ -66,7 +66,7 @@ export class HomePage {
 			controls: {
 				compass: false,
 				myLocation: true,
-				myLocationButton: false,
+				myLocationButton: true,
 				zoom: true
 			},
 			gestures: {
@@ -92,6 +92,7 @@ export class HomePage {
 		};
 
 		this.hMap = this.mapCtrl.addMap('HOME', 'map_canvas', newMapOptions);
+		this.htmInfoWindow = new HtmlInfoWindow();
 	}
 
 	ionViewDidEnter() {
