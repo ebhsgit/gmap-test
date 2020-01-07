@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { GoogleMap, GoogleMaps, GoogleMapsAnimation, GoogleMapsEvent, LatLng, MarkerOptions, PolylineOptions } from '@ionic-native/google-maps';
-import { NavController } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 
 const CAMERA_DEFAULT_LAT = 40.771133;
 const CAMERA_DEFAULT_LONG = -73.974187;
 const CAMERA_DEFAULT_ZOOMLEVEL = 13;
 
-
+@IonicPage()
 @Component({
 	selector: 'page-second',
 	templateUrl: 'second.html'
@@ -107,8 +107,8 @@ export class SecondPage {
 	}
 
 	addMarker(lat?, lng?) {
-		if(!lat) lat = CAMERA_DEFAULT_LAT + Math.random() / 100;
-		if(!lng) lng = CAMERA_DEFAULT_LONG + Math.random() / 100;
+		if (!lat) lat = CAMERA_DEFAULT_LAT + Math.random() / 100;
+		if (!lng) lng = CAMERA_DEFAULT_LONG + Math.random() / 100;
 		const options: MarkerOptions = {
 			title: 'Marker',
 			snippet: "hello",

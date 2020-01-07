@@ -2,7 +2,6 @@ import { ApplicationRef, Component, ComponentFactoryResolver, ComponentRef, Inje
 import { GoogleMapOptions, GoogleMapsEvent, HtmlInfoWindow, ILatLng, LatLng, Marker, MarkerOptions, PolylineOptions } from '@ionic-native/google-maps';
 import { AlertController, Events, IonicPage, NavController, Platform, ToastController } from 'ionic-angular';
 import { MapControllerProvider, MapInstance } from "../../providers/map-controller";
-import { SecondPage } from "../second/second";
 import { CustomMarkerHtmlWindowComponent } from './custom-marker-html-window/custom-marker-html-window';
 
 
@@ -143,7 +142,7 @@ export class HomePage {
 		if (this.navCtrl.isTransitioning())
 			return;
 
-		this.navCtrl.push(SecondPage, {}, { animate: false });
+		this.navCtrl.push("SecondPage", {}, { animate: false });
 	}
 
 	hideMap() {
