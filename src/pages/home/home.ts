@@ -173,11 +173,13 @@ export class HomePage {
 			position: markerPos,
 			zIndex: 999,
 			myTitle: 'Marker',
+			cId: `${Date()}`,
 		}
 		const marker = this.hMap.nativeMapObj.addMarkerSync(options);
 		marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe((parmas: any[]) => {
 			this.onMarkerClick(parmas.pop() as Marker);
 		});
+		marker.trigger(GoogleMapsEvent.MARKER_CLICK, marker);
 
 		const currLoc = await this.hMap.nativeMapObj.getMyLocation();
 		const routePoints: ILatLng[] = [];
@@ -213,7 +215,10 @@ export class HomePage {
 		// Create a component
 		const compFactory = this.resolver.resolveComponentFactory(CustomMarkerHtmlWindowComponent);
 		let compRef: ComponentRef<CustomMarkerHtmlWindowComponent> = compFactory.create(this.injector);
+
 		compRef.instance.myTitle = marker.get("myTitle");
+		compRef.instance.cId = marker.get("cId");
+		
 		this.appRef.attachView(compRef.hostView);
 
 		let div = document.createElement('div');

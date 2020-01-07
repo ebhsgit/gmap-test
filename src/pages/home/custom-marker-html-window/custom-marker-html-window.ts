@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'custom-marker-html-window',
-  templateUrl: 'custom-marker-html-window.html'
+	selector: 'custom-marker-html-window',
+	templateUrl: 'custom-marker-html-window.html'
 })
 export class CustomMarkerHtmlWindowComponent {
+	myTitle: string;
+	cId: string;
 
-  constructor() {
-  }
+	constructor() {
+	}
 
-  myTitle: string;
-
-  onButton_click(event) {
-    alert(`This is '${this.myTitle}'`);
-  }
+	onButton_click(event) {
+		alert(`This is '${this.cId}'`);
+	}
 
 }

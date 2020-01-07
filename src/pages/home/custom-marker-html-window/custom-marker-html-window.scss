@@ -1,3 +1,14 @@
-custom-marker-html-window {
+.pgm-html-info-content-box {
+  // Fix for map plugin info box incorrect positioning
+  padding: 0px !important;
+}
 
+custom-marker-html-window {
+  .title {
+    white-space: nowrap;
+  }
+
+  .container {
+    padding: 5px;
+  }
 }
