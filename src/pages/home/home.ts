@@ -164,15 +164,15 @@ export class HomePage {
 		const url = "./assets/imgs/finish.png";
 		const markerPos = new LatLng(lat, lng);
 		const options: MarkerOptions = {
-			title: 'Marker',
-			snippet: "hello",
 			icon: {
 				url: url,
 				size: { width: 32, height: 32 },
 				anchor: [0, 32],
 			},
+			infoWindowAnchor: [32, 0],
 			position: markerPos,
 			zIndex: 999,
+			myTitle: 'Marker',
 		}
 		const marker = this.hMap.nativeMapObj.addMarkerSync(options);
 		marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe((parmas: any[]) => {
@@ -213,7 +213,7 @@ export class HomePage {
 		// Create a component
 		const compFactory = this.resolver.resolveComponentFactory(CustomMarkerHtmlWindowComponent);
 		let compRef: ComponentRef<CustomMarkerHtmlWindowComponent> = compFactory.create(this.injector);
-		compRef.instance.myTitle = marker.get("title");
+		compRef.instance.myTitle = marker.get("myTitle");
 		this.appRef.attachView(compRef.hostView);
 
 		let div = document.createElement('div');
