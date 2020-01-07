@@ -1,16 +1,11 @@
-import { Component } from '@angular/core';
-import { AlertController, Events, NavController } from 'ionic-angular';
-import {
-	GoogleMaps,
-	GoogleMap,
-	GoogleMapsEvent,
-	LocationService, GoogleMapOptions, Environment, MarkerOptions, GoogleMapsAnimation, LatLng, PolylineOptions, ILatLng
-} from '@ionic-native/google-maps';
-
-import { ToastController, Platform } from 'ionic-angular';
-
-import { SecondPage } from "../second/second";
+import { ApplicationRef, Component, ComponentFactoryResolver, ComponentRef, Injector, NgZone } from '@angular/core';
+import { GoogleMapOptions, GoogleMapsEvent, HtmlInfoWindow, ILatLng, LatLng, Marker, MarkerOptions, PolylineOptions } from '@ionic-native/google-maps';
+import { AlertController, Events, NavController, Platform, ToastController } from 'ionic-angular';
 import { MapControllerProvider, MapInstance } from "../../providers/map-controller";
+import { SecondPage } from "../second/second";
+import { CustomMarkerHtmlWindowComponent } from './custom-marker-html-window/custom-marker-html-window';
+
+
 
 const CAMERA_DEFAULT_LAT = 65.9667;
 const CAMERA_DEFAULT_LONG = -18.5333;
@@ -29,13 +24,19 @@ export class HomePage {
 
 	private hMap: MapInstance;
 
+	htmInfoWindow: HtmlInfoWindow;
+
 	constructor(
 		private navCtrl: NavController,
 		private events: Events,
 		private mapCtrl: MapControllerProvider,
 		private toastCtrl: ToastController,
 		private alertCtrl: AlertController,
-		private platform: Platform
+		private platform: Platform,
+		private injector: Injector,
+		private resolver: ComponentFactoryResolver,
+		private appRef: ApplicationRef,
+		private _ngZone: NgZone
 	) {
 		this.setupEventListeners();
 	}
@@ -173,6 +174,9 @@ export class HomePage {
 			zIndex: 999,
 		}
 		const marker = this.hMap.nativeMapObj.addMarkerSync(options);
+		marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe((parmas: any[]) => {
+			this.onMarkerClick(parmas.pop() as Marker);
+		});
 
 		const currLoc = await this.hMap.nativeMapObj.getMyLocation();
 		const routePoints: ILatLng[] = [];
@@ -202,5 +206,27 @@ export class HomePage {
 			.then(() => {
 				this.cameraAnimating = undefined;
 			});
+	}
+
+	private onMarkerClick(marker: Marker) {
+		// Create a component
+		const compFactory = this.resolver.resolveComponentFactory(CustomMarkerHtmlWindowComponent);
+		let compRef: ComponentRef<CustomMarkerHtmlWindowComponent> = compFactory.create(this.injector);
+		compRef.instance.myTitle = marker.get("title");
+		this.appRef.attachView(compRef.hostView);
+
+		let div = document.createElement('div');
+		div.appendChild(compRef.location.nativeElement);
+
+		// Dynamic rendering
+		this._ngZone.run(() => {
+			this.htmInfoWindow.setContent(div);
+			this.htmInfoWindow.open(marker);
+		});
+
+		// Destroy the component when the htmlInfoWindow is closed.
+		this.htmInfoWindow.one(GoogleMapsEvent.INFO_CLOSE).then(() => {
+			compRef.destroy();
+		});
 	}
 }
