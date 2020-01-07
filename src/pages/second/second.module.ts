@@ -8,9 +8,6 @@ import { SecondPage } from './second';
     ],
     imports: [
         IonicPageModule.forChild(SecondPage),
-    ],
-    exports: [
-        SecondPage,
     ]
 })
 export class SecondPageModule { }

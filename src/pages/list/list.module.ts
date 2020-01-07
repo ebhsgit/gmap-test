@@ -9,8 +9,5 @@ import { ListPage } from './list';
     imports: [
         IonicPageModule.forChild(ListPage),
     ],
-    exports: [
-        ListPage,
-    ]
 })
 export class ListPageModule { }
