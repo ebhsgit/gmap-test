@@ -32,6 +32,7 @@
     "cordova-plugin-ionic-keyboard": "^2.1.3",
     "cordova-plugin-ionic-webview": "^4.0.1",
     "cordova-plugin-splashscreen": "^5.0.2",
+    "cordova-plugin-statusbar": "^2.4.3",
     "cordova-plugin-whitelist": "^1.3.3",
     "cordova-res": "^0.6.0",
     "ionic-angular": "3.9.4",
@@ -61,7 +62,8 @@
         "API_KEY_FOR_IOS": "<<API KEY>>",
         "LOCATION_WHEN_IN_USE_DESCRIPTION": "This app wants to get your location while this app runs only.",
         "LOCATION_ALWAYS_USAGE_DESCRIPTION": "This app wants to get your location always, even this app runs in background."
-      }
+      },
+      "cordova-plugin-statusbar": {}
     },
     "platforms": [
       "android",
