@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GoogleMap, GoogleMaps, GoogleMapsAnimation, GoogleMapsEvent, LatLng, MarkerOptions, PolylineOptions } from '@ionic-native/google-maps';
+import { GoogleMap, GoogleMaps, GoogleMapsAnimation, GoogleMapsEvent, LatLng, Marker, MarkerOptions, PolylineOptions } from '@ionic-native/google-maps';
 import { IonicPage, NavController } from 'ionic-angular';
 
 const CAMERA_DEFAULT_LAT = 40.771133;
@@ -106,6 +106,7 @@ export class SecondPage {
 		this.map.addPolylineSync(options);
 	}
 
+	private newMarker: Marker;
 	addMarker(lat?, lng?) {
 		if (!lat) lat = CAMERA_DEFAULT_LAT + Math.random() / 100;
 		if (!lng) lng = CAMERA_DEFAULT_LONG + Math.random() / 100;
@@ -117,7 +118,11 @@ export class SecondPage {
 			zIndex: 999,
 			animation: GoogleMapsAnimation.DROP
 		}
-		this.map.addMarkerSync(options);
+		this.newMarker = this.map.addMarkerSync(options);
+	}
+
+	updateSnippet() {
+		this.newMarker.setSnippet(`${Date.now()}`);
 	}
 
 	animateCamera() {
