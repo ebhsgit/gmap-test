@@ -38,7 +38,7 @@
   "devDependencies": {
     "@ionic/app-scripts": "3.2.4",
     "cordova-plugin-device": "^2.0.3",
-    "cordova-plugin-googlemaps": "git+https://github.com/ebhsgit/cordova-plugin-googlemaps.git#mod",
+    "cordova-plugin-googlemaps": "^2.7.0",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
     "cordova-plugin-splashscreen": "^5.0.4",
