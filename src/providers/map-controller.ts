@@ -13,7 +13,7 @@ export interface IMapInstance {
 export class MapInstance {
 	private inst: IMapInstance;
 
-	private ready: Promise<boolean>;
+	public ready: Promise<boolean>;
 	private readyResolve: any;
 	public nativeMapObj: GoogleMap;
 
@@ -40,6 +40,10 @@ export class MapInstance {
 
 	setOptions(options: GoogleMapOptions) {
 		this.inst.options = options;
+	}
+
+	getCameraPosition() {
+        return this.nativeMapObj.getCameraTarget();
 	}
 
 	show() {
