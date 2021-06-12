@@ -52,12 +52,6 @@ export class HomePage {
 		});
 	}
 
-	ionViewWillLeave() {
-		console.log('HomePage: ionViewWillLeave()');
-		this.hMap.hide();
-		this.events.unsubscribe('MARKER.CLICK', this._handleMarkerClick);
-	}
-
 	ionViewDidLoad() {
 		console.log('HomePage: ionViewDidLoad()');
 
@@ -97,7 +91,14 @@ export class HomePage {
 
 	ionViewDidEnter() {
 		console.log('HomePage: ionViewDidEnter()');
+
+		console.log(`-----Map.TARGET mapOptions [lat: ${this.hMap.getOptions().camera.target.lat}] [lng: ${this.hMap.getOptions().camera.target.lng}]`)
+
 		this.hMap.show();
+
+		this.hMap.ready.then(() => {
+			console.log(`-----Map.TARGET mapReady [lat: ${this.hMap.getCameraPosition().lat}] [lng: ${this.hMap.getCameraPosition().lng}]`)
+		})
 
 		this.platform.ready().then(
 			() => {
@@ -108,6 +109,8 @@ export class HomePage {
 
 	private cameraAnimating: Promise<void>;
 	ionViewCanLeave() {
+		console.log(`-----Map.TARGET onLeave [lat: ${this.hMap.getCameraPosition().lat}] [lng: ${this.hMap.getCameraPosition().lng}]`)
+
 		if (!this.cameraAnimating) {
 			return true;
 		} else {
@@ -115,6 +118,12 @@ export class HomePage {
 		}
 	}
 
+	ionViewWillLeave() {
+		console.log('HomePage: ionViewWillLeave()');
+		this.hMap.hide();
+		this.events.unsubscribe('MARKER.CLICK', this._handleMarkerClick);
+	}
+	
 	private _handleMarkerClick(evtData) {
 		console.log(JSON.stringify(evtData));
 	}
