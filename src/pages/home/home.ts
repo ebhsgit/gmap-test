@@ -1,19 +1,16 @@
-import { ApplicationRef, Component, ComponentFactoryResolver, ComponentRef, Injector, NgZone } from '@angular/core';
-import { GoogleMapOptions, GoogleMapsEvent, HtmlInfoWindow, ILatLng, LatLng, Marker, MarkerOptions, PolylineOptions } from '@ionic-native/google-maps';
-import { AlertController, Events, IonicPage, NavController, Platform, ToastController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { GoogleMap, GoogleMapOptions, GoogleMapsEvent, HtmlInfoWindow, ILatLng, Marker, MarkerOptions, Polyline, PolylineOptions } from '@ionic-native/google-maps';
+import { IonicPage } from 'ionic-angular';
 import { MapControllerProvider, MapInstance } from "../../providers/map-controller";
-import { CustomMarkerHtmlWindowComponent } from './custom-marker-html-window/custom-marker-html-window';
-
-
 
 const CAMERA_DEFAULT_LAT = 65.9667;
 const CAMERA_DEFAULT_LONG = -18.5333;
 const CAMERA_DEFAULT_ZOOMLEVEL = 13;
-const POLYGON_STROKE_COLOR = '#73922a70';
-const POLYGON_FILL_COLOR = '#8fbf1c20';
-const POLYGON_STROKE_WIDTH = 2;
-
-const mapId = 'HOME_MAP';
+const POLYLINE_COLOR_BLUE = '#488aff70';
+const POLYLINE_COLOR_GREEN = '#32db6470';
+const POLYLINE_COLOR_RED = '#f53d3d70';
+const POLYLINE_COLOR_YELLOW = '#ffce0070';
+const POLYLINE_STROKE_WIDTH = 5;
 
 @IonicPage()
 @Component({
@@ -23,39 +20,20 @@ const mapId = 'HOME_MAP';
 export class HomePage {
 
 	private hMap: MapInstance;
+	private get gMap(): GoogleMap {
+		return this.hMap.nativeMapObj
+	}
 
 	htmInfoWindow: HtmlInfoWindow;
 
 	constructor(
-		private navCtrl: NavController,
-		private events: Events,
 		private mapCtrl: MapControllerProvider,
-		private toastCtrl: ToastController,
-		private alertCtrl: AlertController,
-		private platform: Platform,
-		private injector: Injector,
-		private resolver: ComponentFactoryResolver,
-		private appRef: ApplicationRef,
-		private _ngZone: NgZone
 	) {
-		this.setupEventListeners();
-	}
-
-	setupEventListeners() {
-		console.log('HomePage: setupEventListeners()');
-		this.platform.pause.subscribe(() => {
-			console.info('Application is in running in the background...');
-		});
-
-		this.platform.resume.subscribe(() => {
-			console.info('Application is in running in the foreground...');
-		});
 	}
 
 	ionViewWillLeave() {
 		console.log('HomePage: ionViewWillLeave()');
 		this.hMap.hide();
-		this.events.unsubscribe('MARKER.CLICK', this._handleMarkerClick);
 	}
 
 	ionViewDidLoad() {
@@ -77,16 +55,12 @@ export class HomePage {
 			},
 			camera: {
 				target: {
-					lat: CAMERA_DEFAULT_LAT,
-					lng: CAMERA_DEFAULT_LONG
+					lat: 2,
+					lng: 2
 				},
-				zoom: CAMERA_DEFAULT_ZOOMLEVEL
+				zoom: 10,
 			},
 			preferences: {
-				zoom: {
-					minZoom: 10,
-					maxZoom: 18
-				},
 				building: false
 			}
 		};
@@ -98,12 +72,6 @@ export class HomePage {
 	ionViewDidEnter() {
 		console.log('HomePage: ionViewDidEnter()');
 		this.hMap.show();
-
-		this.platform.ready().then(
-			() => {
-				this.events.subscribe('MARKER.CLICK', this._handleMarkerClick);
-			}
-		);
 	}
 
 	private cameraAnimating: Promise<void>;
@@ -113,37 +81,6 @@ export class HomePage {
 		} else {
 			return this.cameraAnimating;
 		}
-	}
-
-	private _handleMarkerClick(evtData) {
-		console.log(JSON.stringify(evtData));
-	}
-
-	displayToast() {
-		console.log('displayToast()');
-		let toast = this.toastCtrl.create({
-			message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-			showCloseButton: true,
-			position: 'top'
-		});
-
-		toast.onDidDismiss(() => {
-			console.log('Dismissed toast');
-		});
-
-		toast.present();
-	}
-
-
-	openSecondPage() {
-		console.log('HomePage: openSecondPage()');
-		console.log(`isTransitioning - include ancestor: ${this.navCtrl.isTransitioning(true)}`);
-		console.log(`isTransitioning - no ancestor: ${this.navCtrl.isTransitioning(false)}`);
-
-		if (this.navCtrl.isTransitioning())
-			return;
-
-		this.navCtrl.push("SecondPage", {}, { animate: false });
 	}
 
 	hideMap() {
@@ -156,83 +93,68 @@ export class HomePage {
 		this.hMap.show();
 	}
 
-	async addMarker(lat?, lng?) {
-		console.log('HomePage: addNewMarker()');
-		if (!lat) lat = CAMERA_DEFAULT_LAT + Math.random() / 100;
-		if (!lng) lng = CAMERA_DEFAULT_LONG + Math.random() / 100;
+	private bluePolyline: Polyline
+	private greenPolyline: Polyline
+	private redPolyline: Polyline
+	private yellowPolyline: Polyline
 
-		const url = "./assets/imgs/finish.png";
-		const markerPos = new LatLng(lat, lng);
+	createPolylines() {
+		this.bluePolyline = this._createPolyline("blue", POLYLINE_COLOR_BLUE, 0)
+		this.greenPolyline = this._createPolyline("green", POLYLINE_COLOR_GREEN, .1)
+		this.redPolyline = this._createPolyline("red", POLYLINE_COLOR_RED, .2)
+		this.yellowPolyline = this._createPolyline("yellow", POLYLINE_COLOR_YELLOW, .3)
+	}
+
+	private _createPolyline(name: string, color: string, lat: number): Polyline {
+		const options: PolylineOptions = {
+			points: [
+				{ lat: lat, lng: 0 },
+				{ lat: lat + 1, lng: 1 },
+				{ lat: lat + 2, lng: 2 },
+				{ lat: lat + 3, lng: 3 },
+				{ lat: lat + 4, lng: 4 },
+			],
+			color: color,
+			width: POLYLINE_STROKE_WIDTH,
+			clickable: true,
+			geodesic: true,
+		};
+		const polyline = this.gMap.addPolylineSync(options);
+		polyline.set("name", name)
+		polyline.on(GoogleMapsEvent.POLYLINE_CLICK).subscribe((params: any) => {
+			this.onPolylineClicked(params[0], params[1]);
+		});
+
+		return polyline
+	}
+
+
+	private onPolylineClicked(position: ILatLng, polyline: Polyline) {
 		const options: MarkerOptions = {
-			icon: {
-				url: url,
-				size: { width: 32, height: 32 },
-				anchor: [0, 32],
-			},
-			infoWindowAnchor: [32, 0],
-			position: markerPos,
+			position: position,
 			zIndex: 999,
-			myTitle: 'Marker',
-			cId: `${Date()}`,
+			title: polyline.get("name") || "Marker",
 		}
-		const marker = this.hMap.nativeMapObj.addMarkerSync(options);
-		marker.on(GoogleMapsEvent.MARKER_CLICK).subscribe((parmas: any[]) => {
-			this.onMarkerClick(parmas.pop() as Marker);
+		const marker = this.gMap.addMarkerSync(options)
+		marker.on(GoogleMapsEvent.INFO_CLOSE).subscribe((params: any) => {
+			const m = params[1] as Marker;
+			if (m) {
+				m.remove();
+				m.destroy();
+			}
 		});
-		marker.trigger(GoogleMapsEvent.MARKER_CLICK, marker);
 
-		const currLoc = await this.hMap.nativeMapObj.getMyLocation();
-		const routePoints: ILatLng[] = [];
-		routePoints.push(currLoc.latLng);
-		routePoints.push(markerPos);
-
-		const po: PolylineOptions = {
-			points: routePoints,
-			width: 8,
-			geodesic: true
-		}
-		this.hMap.nativeMapObj.addPolylineSync(po);
+		marker.showInfoWindow();
 	}
 
-
-	animateCamera() {
-		const lat = CAMERA_DEFAULT_LAT + Math.random();
-		const lng = CAMERA_DEFAULT_LONG + Math.random();
-		this.addMarker(lat, lng);
-		this.cameraAnimating = this.hMap.nativeMapObj.animateCamera({
-			target: {
-				lat: lat,
-				lng: lng
-			},
-			duration: 5000
+	changePoints_green() {
+		const newPoints = this.greenPolyline.getPoints().map((_, i) => {
+			return {
+				lat: i,
+				lng: 2,
+			} as ILatLng
 		})
-			.then(() => {
-				this.cameraAnimating = undefined;
-			});
-	}
 
-	private onMarkerClick(marker: Marker) {
-		// Create a component
-		const compFactory = this.resolver.resolveComponentFactory(CustomMarkerHtmlWindowComponent);
-		let compRef: ComponentRef<CustomMarkerHtmlWindowComponent> = compFactory.create(this.injector);
-
-		compRef.instance.myTitle = marker.get("myTitle");
-		compRef.instance.cId = marker.get("cId");
-		
-		this.appRef.attachView(compRef.hostView);
-
-		let div = document.createElement('div');
-		div.appendChild(compRef.location.nativeElement);
-
-		// Dynamic rendering
-		this._ngZone.run(() => {
-			this.htmInfoWindow.setContent(div);
-			this.htmInfoWindow.open(marker);
-		});
-
-		// Destroy the component when the htmlInfoWindow is closed.
-		this.htmInfoWindow.one(GoogleMapsEvent.INFO_CLOSE).then(() => {
-			compRef.destroy();
-		});
+		this.greenPolyline.setPoints(newPoints)
 	}
 }

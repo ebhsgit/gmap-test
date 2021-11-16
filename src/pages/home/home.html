@@ -4,11 +4,6 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Home</ion-title>
-    <ion-buttons end>
-      <button ion-button (click)="displayToast()">
-        Show toast
-      </button>
-    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -20,11 +15,8 @@
   <ion-footer>
 
 
-    <button ion-button primary (click)="hideMap()">Hide Map</button>
-    <button ion-button primary (click)="showMap()">Show Map</button>
-    <button ion-button primary (click)="addMarker()">Add Marker</button>
-    <button ion-button primary (click)="openSecondPage()">Root Page #2</button>
-    <button ion-button primary (click)="animateCamera()">Animate Camera</button>
+    <button ion-button primary (click)="createPolylines()">Create polylines</button>
+    <button ion-button primary (click)="changePoints_green()">Change points on Green</button>
 
 
   </ion-footer>
